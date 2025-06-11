@@ -24,26 +24,31 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+     - name: Login to Amazon ECR
+  id: login-ecr
+  uses: aws-actions/amazon-ecr-login@v1
+
 
       - name: Build and push vote image
         run: |
-          docker build -t vote-dev-latest ./vote
-          docker tag vote-dev-latest ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:vote-dev-latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:vote-dev-latest
+      
+docker build -t vote-dev-latest .
+docker tag vote-dev-latest 629860297780.dkr.ecr.us-east-1.amazonaws.com/lks-voting-image:vote-dev-latest
+docker push 629860297780.dkr.ecr.us-east-1.amazonaws.com/lks-voting-image:vote-dev-latest
+
 
       - name: Build and push result image
         run: |
-          docker build -t result-dev-latest ./result
-          docker tag result-dev-latest ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:result-dev-latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:result-dev-latest
+          
+docker build -t result-dev-latest .
+docker tag result-dev-latest 629860297780.dkr.ecr.us-east-1.amazonaws.com/lks-voting-image:result-dev-latest
+docker push 629860297780.dkr.ecr.us-east-1.amazonaws.com/lks-voting-image:result-dev-latest
 
       - name: Build and push worker image
-        run: |
-          docker build -t worker-dev-latest ./worker
-          docker tag worker-dev-latest ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:worker-dev-latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:worker-dev-latest
+       run: |
+docker build -t worker-dev-latest .
+docker tag worker-dev-latest 629860297780.dkr.ecr.us-east-1.amazonaws.com/lks-voting-image:worker-dev-latest
+docker push 629860297780.dkr.ecr.us-east-1.amazonaws.com/lks-voting-image:worker-dev-latest
 
   pull-master:
     name: Pull Image on Master Node
